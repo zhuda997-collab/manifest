@@ -52,13 +52,13 @@ function renderTable() {
         return;
     }
 
-    tbody.innerHTML = pageItems.map(item => {
+    tbody.innerHTML = pageItems.map((item, idx) => {
+        const seq = start + idx + 1;
         const priceYuan = (item.unitPrice / 100).toFixed(2);
         const createdAt = item.createdAt ? formatDate(item.createdAt) : '—';
         const updatedAt = item.updatedAt ? formatDate(item.updatedAt) : '—';
         return `<tr>
-            <td>${item.id}</td>
-            <td><span style="font-family:monospace;font-size:11px;color:var(--gray-500)">${esc(item.guid || '')}</span></td>
+            <td>${seq}</td>
             <td><strong>${item.productNo}</strong></td>
             <td>${esc(item.productName || '')}</td>
             <td>${item.submodelNo ?? '—'}</td>

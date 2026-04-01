@@ -47,12 +47,12 @@ function renderTable() {
         return;
     }
 
-    tbody.innerHTML = pageItems.map(item => {
+    tbody.innerHTML = pageItems.map((item, idx) => {
+        const seq = start + idx + 1;
         const createdAt = item.createdAt ? formatDate(item.createdAt) : '—';
         const updatedAt = item.updatedAt ? formatDate(item.updatedAt) : '—';
         return `<tr>
-            <td>${item.id}</td>
-            <td><span style="font-family:monospace;font-size:11px;color:var(--gray-500)">${esc(item.guid || '')}</span></td>
+            <td>${seq}</td>
             <td><strong>${esc(item.customerName || '')}</strong></td>
             <td>${esc(item.phone || '—')}</td>
             <td title="${esc(item.address || '')}">${esc(truncate(item.address, 30) || '—')}</td>
