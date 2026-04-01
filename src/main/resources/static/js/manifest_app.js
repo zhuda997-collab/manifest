@@ -297,7 +297,7 @@ function addItemRow(productId, quantity, unitPrice) {
             <select class="product-sel" onchange="onProductChange(this)">${productOptions ? '<option value="">— 选择产品 —</option>' + productOptions : '<option value="">无可用产品</option>'}</select>
         </td>
         <td><input type="number" class="qty-input" value="${quantity || 1}" min="1" oninput="recalcRow(this);updateGrandTotal()"></td>
-        <td><input type="number" class="price-input" value="${unitPrice ? (unitPrice/100).toFixed(2) : ''}" step="0.01" min="0" placeholder="0.00" oninput="updateGrandTotal()"></td>
+        <td><input type="number" class="price-input" value="${unitPrice ? (unitPrice/100).toFixed(2) : ''}" step="0.01" min="0" placeholder="产品定价" readonly style="background:#f0f0f0;color:#888;cursor:not-allowed;"></td>
         <td class="subtotal-cell">¥0.00</td>
         <td><button type="button" class="delete-btn" onclick="removeItemRow(this)">删除</button></td>
         <td class="product-no-cell" style="font-size:12px;color:var(--gray-500);"></td>

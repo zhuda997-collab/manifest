@@ -56,20 +56,21 @@ public class ManifestService {
 
         // 处理明细行：冻结产品快照 + 计算小计 + 关联父实体
         for (ManifestItem item : manifest.getItems()) {
-            // 冻结产品快照
-            if (item.getProductId() != null) {
-                Product p = productRepository.findById(item.getProductId()).orElse(null);
-                if (p != null) {
-                    item.setProductName(p.getProductName());
-                    item.setProductNo(p.getProductNo());
-                    item.setSubmodelName(p.getSubmodelName());
-                    item.setSubmodelNo(p.getSubmodelNo());
-                    // 如果前端没传单价，用产品表里的单价（分）
-                    if (item.getUnitPrice() == null || item.getUnitPrice() == 0) {
-                        item.setUnitPrice(p.getUnitPrice());
-                    }
-                }
+            // 必须选择产品（productId 不能为空）
+            if (item.getProductId() == null) {
+                throw new RuntimeException("每条明细必须选择产品");
             }
+            Product p = productRepository.findById(item.getProductId()).orElse(null);
+            if (p == null) {
+                throw new RuntimeException("产品不存在: ID=" + item.getProductId());
+            }
+            // 冻结产品快照信息
+            item.setProductName(p.getProductName());
+            item.setProductNo(p.getProductNo());
+            item.setSubmodelName(p.getSubmodelName());
+            item.setSubmodelNo(p.getSubmodelNo());
+            // 强制使用产品表中的当前单价（不接受前端传入的值）
+            item.setUnitPrice(p.getUnitPrice());
             // 计算小计
             item.calcSubtotal();
             // 手动关联父实体（确保外键不为 null）

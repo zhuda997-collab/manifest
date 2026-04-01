@@ -48,11 +48,17 @@ public class ManifestController {
             result.put("message", "请至少添加一个产品明细");
             return ResponseEntity.badRequest().body(result);
         }
-        Manifest saved = manifestService.save(manifest);
-        result.put("success", true);
-        result.put("message", "货单创建成功");
-        result.put("data", saved);
-        return ResponseEntity.ok(result);
+        try {
+            Manifest saved = manifestService.save(manifest);
+            result.put("success", true);
+            result.put("message", "货单创建成功");
+            result.put("data", saved);
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            result.put("success", false);
+            result.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
     /** 更新货单 */
@@ -72,11 +78,17 @@ public class ManifestController {
             return ResponseEntity.badRequest().body(result);
         }
         manifest.setId(id);
-        Manifest saved = manifestService.save(manifest);
-        result.put("success", true);
-        result.put("message", "货单更新成功");
-        result.put("data", saved);
-        return ResponseEntity.ok(result);
+        try {
+            Manifest saved = manifestService.save(manifest);
+            result.put("success", true);
+            result.put("message", "货单更新成功");
+            result.put("data", saved);
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            result.put("success", false);
+            result.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
     /** 删除货单 */
