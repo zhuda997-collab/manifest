@@ -26,8 +26,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    /** 全局唯一标识符 */
-    @NotBlank(message = "GUID不能为空")
+    /** 全局唯一标识符（自动生成） */
     @Column(name = "guid", unique = true, length = 36, nullable = false)
     private String guid;
 
