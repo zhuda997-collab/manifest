@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品管理</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: var(--gray-100); }
+        .page-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .page-nav a {
+            padding: 6px 14px;
+            border-radius: var(--radius);
+            background: var(--gray-200);
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+        .page-nav a:hover { background: var(--gray-300); }
+        .page-nav a.active {
+            background: var(--primary);
+            color: #fff;
+        }
+        .price-hint {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+        .data-table th:nth-child(6),
+        .data-table td:nth-child(6) {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 标题区 -->
+        <div class="header">
+            <h1>🏭 产品管理系统</h1>
+            <p class="subtitle">Product Management System</p>
+        </div>
+
+        <!-- 页面导航 -->
+        <div class="page-nav">
+            <a href="index.html">📋 货单管理</a>
+            <a href="product.html" class="active">🏭 产品管理</a>
+        </div>
+
+        <!-- 操作区 -->
+        <div class="toolbar">
+            <button class="btn btn-primary" onclick="openModal('add')">➕ 新增产品</button>
+            <button class="btn btn-secondary" onclick="loadData()">🔄 刷新数据</button>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索产品名或产品号..." oninput="handleSearch()">
+            </div>
+        </div>
+
+        <!-- 统计区 -->
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">产品种类</span>
+                <span class="stat-value" id="totalCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">总产品数</span>
+                <span class="stat-value" id="totalProducts">0</span>
+            </div>
+        </div>
+
+        <!-- 表格区 -->
+        <div class="table-wrapper">
+            <table class="data-table" id="productTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>GUID</th>
+                        <th>产品号</th>
+                        <th>产品名</th>
+                        <th>子型号int</th>
+                        <th>子型号名</th>
+                        <th>单价(元)</th>
+                        <th>创建时间</th>
+                        <th>更新时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr class="empty-row">
+                        <td colspan="10">暂无数据，请点击「新增产品」添加</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 分页区 -->
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- 弹窗：新增 / 编辑 -->
+    <div class="modal-overlay" id="formModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">新增产品</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <form id="productForm" onsubmit="submitForm(event)">
+                <input type="hidden" id="editId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>产品号 <span class="required">*</span></label>
+                        <input type="number" id="productNo" required min="0" placeholder="例如：1001">
+                    </div>
+                    <div class="form-group">
+                        <label>产品名 <span class="required">*</span></label>
+                        <input type="text" id="productName" required maxlength="200" placeholder="例如：不锈钢螺丝 M8×30">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>子型号int</label>
+                        <input type="number" id="submodelNo" min="0" placeholder="例如：1">
+                    </div>
+                    <div class="form-group">
+                        <label>子型号名</label>
+                        <input type="text" id="submodelName" maxlength="200" placeholder="例如：豪华版 / 标准版">
+                    </div>
+                </div>
+                <div class="form-group" style="max-width: 280px;">
+                    <label>单价(元) <span class="required">*</span></label>
+                    <input type="number" id="unitPriceYuan" required min="0" step="0.01" placeholder="例如：99.50">
+                    <span class="price-hint">输入金额，系统自动转换为"分"存储</span>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 确认删除弹窗 -->
+    <div class="modal-overlay" id="confirmModal" style="display: none;">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h3>确认删除</h3>
+                <button class="modal-close" onclick="closeConfirm()">×</button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除这条产品记录吗？此操作不可撤销。</p>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" onclick="closeConfirm()">取消</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/product_app.js"></script>
+</body>
+</html>
