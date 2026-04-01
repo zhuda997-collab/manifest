@@ -383,7 +383,7 @@ async function submitForm(e) {
                 unitPrice: priceFen,
                 productName: selected.dataset.name,
                 submodelName: selected.dataset.submodel || null,
-                submodelNo: parseInt(selected.dataset.submodelNo) || null
+                submodelNo: selected.dataset.submodelNo || null
             });
         }
     });

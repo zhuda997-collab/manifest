@@ -36,17 +36,17 @@ public class ManifestItem {
     @Column(name = "product_name", length = 200)
     private String productName;
 
-    /** 产品号（快照） */
-    @Column(name = "product_no")
-    private Integer productNo;
+    /** 产品号（快照，字符串） */
+    @Column(name = "product_no", length = 20)
+    private String productNo;
 
     /** 子型号名（快照） */
     @Column(name = "submodel_name", length = 200)
     private String submodelName;
 
-    /** 子型号int（快照） */
-    @Column(name = "submodel_no")
-    private Integer submodelNo;
+    /** 子型号（快照，字符串，保留前导零） */
+    @Column(name = "submodel_no", length = 20)
+    private String submodelNo;
 
     /** 件数 */
     @Column(name = "quantity", nullable = false)

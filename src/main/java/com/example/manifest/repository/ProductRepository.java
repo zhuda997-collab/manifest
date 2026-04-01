@@ -16,8 +16,8 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     boolean existsByGuid(String guid);
 
     /** 按产品号和子型号查找（联合唯一） */
-    Optional<Product> findByProductNoAndSubmodelNo(Integer productNo, Integer submodelNo);
+    Optional<Product> findByProductNoAndSubmodelNo(String productNo, String submodelNo);
 
     /** 检查产品号+子型号组合是否已存在 */
-    boolean existsByProductNoAndSubmodelNo(Integer productNo, Integer submodelNo);
+    boolean existsByProductNoAndSubmodelNo(String productNo, String submodelNo);
 }

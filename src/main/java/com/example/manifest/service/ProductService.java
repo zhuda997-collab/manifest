@@ -47,7 +47,7 @@ public class ProductService {
     }
 
     /** 检查产品号+子型号组合是否已存在 */
-    public boolean existsByProductNoAndSubmodelNo(Integer productNo, Integer submodelNo) {
+    public boolean existsByProductNoAndSubmodelNo(String productNo, String submodelNo) {
         return productRepository.existsByProductNoAndSubmodelNo(productNo, submodelNo);
     }
 }

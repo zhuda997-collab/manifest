@@ -149,9 +149,9 @@ async function submitForm(e) {
     const unitPriceFen = Math.round(unitPriceYuan * 100); // 元 → 分
 
     const payload = {
-        productNo: parseInt(document.getElementById('productNo').value) || 0,
+        productNo: document.getElementById('productNo').value.trim() || null,
         productName: document.getElementById('productName').value.trim(),
-        submodelNo: document.getElementById('submodelNo').value ? parseInt(document.getElementById('submodelNo').value) : null,
+        submodelNo: document.getElementById('submodelNo').value.trim() || null,
         submodelName: document.getElementById('submodelName').value.trim() || null,
         unitPrice: unitPriceFen,
     };
