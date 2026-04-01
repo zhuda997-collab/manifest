@@ -162,8 +162,8 @@ async function showPreview(id) {
                             <tr>
                                 <th>产品 / 子型号</th>
                                 <th>产品号</th>
-                                <th>件数</th>
-                                <th>单价</th>
+                                <th>件</th>
+                                <th>单价(元/件)</th>
                                 <th style="text-align:right;">小计</th>
                             </tr>
                         </thead>

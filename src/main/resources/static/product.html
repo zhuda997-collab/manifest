@@ -41,20 +41,20 @@
     <div class="container">
         <!-- 标题区 -->
         <div class="header">
-            <h1>🏭 产品管理系统</h1>
+            <h1>🌾 菜籽产品管理</h1>
             <p class="subtitle">Product Management System</p>
         </div>
 
         <!-- 页面导航 -->
         <div class="page-nav">
             <a href="index.html">📋 货单管理</a>
-            <a href="product.html" class="active">🏭 产品管理</a>
+            <a href="product.html" class="active">🌾 菜籽产品</a>
             <a href="customer.html">👥 客户管理</a>
         </div>
 
         <!-- 操作区 -->
         <div class="toolbar">
-            <button class="btn btn-primary" onclick="openModal('add')">➕ 新增产品</button>
+            <button class="btn btn-primary" onclick="openModal('add')">➕ 新增菜籽</button>
             <button class="btn btn-secondary" onclick="loadData()">🔄 刷新数据</button>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="搜索产品名或产品号..." oninput="handleSearch()">
@@ -82,9 +82,9 @@
                         <th>GUID</th>
                         <th>产品号</th>
                         <th>产品名</th>
-                        <th>子型号int</th>
+                        <th>子型号</th>
                         <th>子型号名</th>
-                        <th>单价(元)</th>
+                        <th>单价(元/件)</th>
                         <th>创建时间</th>
                         <th>更新时间</th>
                         <th>操作</th>
@@ -118,7 +118,7 @@
                     </div>
                     <div class="form-group">
                         <label>产品名 <span class="required">*</span></label>
-                        <input type="text" id="productName" required maxlength="200" placeholder="例如：不锈钢螺丝 M8×30">
+                        <input type="text" id="productName" required maxlength="200" placeholder="例如：双低油菜籽">
                     </div>
                 </div>
                 <div class="form-row">
@@ -128,13 +128,13 @@
                     </div>
                     <div class="form-group">
                         <label>子型号名</label>
-                        <input type="text" id="submodelName" maxlength="200" placeholder="例如：豪华版 / 标准版">
+                        <input type="text" id="submodelName" maxlength="200" placeholder="例如：一级 / 精品 / 早熟">
                     </div>
                 </div>
                 <div class="form-group" style="max-width: 280px;">
-                    <label>单价(元) <span class="required">*</span></label>
-                    <input type="number" id="unitPriceYuan" required min="0" step="0.01" placeholder="例如：99.50">
-                    <span class="price-hint">输入金额，系统自动转换为"分"存储</span>
+                    <label>单价(元/件) <span class="required">*</span></label>
+                    <input type="number" id="unitPriceYuan" required min="0" step="0.01" placeholder="例如：85.00">
+                    <span class="price-hint">每件菜籽的单价，单位：元</span>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-cancel" onclick="closeModal()">取消</button>
