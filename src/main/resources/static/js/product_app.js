@@ -16,6 +16,7 @@ async function loadData() {
         const resp = await fetch(API_BASE);
         if (!resp.ok) throw new Error('加载数据失败');
         allData = await resp.json();
+        currentData = [...allData];  // 初始化当前数据集
         updateStats();
         goToPage(1);
     } catch (err) {
