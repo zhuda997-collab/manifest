@@ -39,3 +39,17 @@ CREATE TABLE IF NOT EXISTS product (
     INDEX idx_product_name (product_name),
     INDEX idx_product_no (product_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='产品表';
+
+-- 客户表（Customer）
+CREATE TABLE IF NOT EXISTS customer (
+    id            INT AUTO_INCREMENT PRIMARY KEY COMMENT '自增ID',
+    guid          VARCHAR(36)  NOT NULL COMMENT '全局唯一标识符',
+    customer_name VARCHAR(200) NOT NULL COMMENT '客户名',
+    phone         VARCHAR(20)           DEFAULT NULL COMMENT '客户手机号',
+    address       VARCHAR(500)          DEFAULT NULL COMMENT '客户地址',
+    created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    UNIQUE KEY uk_guid (guid),
+    INDEX idx_customer_name (customer_name),
+    INDEX idx_phone (phone)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='客户表';
