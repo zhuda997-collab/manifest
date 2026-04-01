@@ -20,6 +20,12 @@ public class ProductController {
 
     private final ProductService productService;
 
+    /** 下拉框用：返回所有产品（含子型号） */
+    @GetMapping("/all")
+    public ResponseEntity<List<Product>> all() {
+        return ResponseEntity.ok(productService.findAll());
+    }
+
     /** GET /api/product — 查询全部产品 */
     @GetMapping
     public ResponseEntity<List<Product>> list() {

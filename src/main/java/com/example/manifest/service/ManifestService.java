@@ -1,49 +1,89 @@
 package com.example.manifest.service;
 
+import com.example.manifest.entity.Customer;
 import com.example.manifest.entity.Manifest;
+import com.example.manifest.entity.ManifestItem;
+import com.example.manifest.entity.Product;
+import com.example.manifest.repository.CustomerRepository;
 import com.example.manifest.repository.ManifestRepository;
+import com.example.manifest.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ManifestService {
 
     private final ManifestRepository manifestRepository;
+    private final CustomerRepository customerRepository;
+    private final ProductRepository productRepository;
 
-    /** 查询全部 */
     public List<Manifest> findAll() {
         return manifestRepository.findAll();
     }
 
-    /** 根据 ID 查询 */
-    public Optional<Manifest> findById(Long id) {
-        return manifestRepository.findById(id);
+    public Manifest findById(Integer id) {
+        return manifestRepository.findById(id).orElse(null);
     }
 
-    /** 根据货品编号查询 */
-    public Optional<Manifest> findByGoodsNo(String goodsNo) {
-        return manifestRepository.findByGoodsNo(goodsNo);
-    }
-
-    /** 新增或更新 */
+    /**
+     * 新增货单：
+     * 1. 冻结客户快照信息
+     * 2. 计算每个明细的小计
+     * 3. 计算总价
+     * 4. 保存
+     */
     @Transactional
     public Manifest save(Manifest manifest) {
+        // 自动生成 GUID
+        if (manifest.getGuid() == null || manifest.getGuid().isBlank()) {
+            manifest.setGuid(UUID.randomUUID().toString());
+        }
+
+        // 冻结客户快照信息
+        if (manifest.getCustomerId() != null) {
+            Customer c = customerRepository.findById(manifest.getCustomerId()).orElse(null);
+            if (c != null) {
+                manifest.setCustomerName(c.getCustomerName());
+                manifest.setCustomerPhone(c.getPhone());
+                manifest.setCustomerAddress(c.getAddress());
+            }
+        }
+
+        // 处理明细行：冻结产品快照 + 计算小计 + 关联父实体
+        for (ManifestItem item : manifest.getItems()) {
+            // 冻结产品快照
+            if (item.getProductId() != null) {
+                Product p = productRepository.findById(item.getProductId()).orElse(null);
+                if (p != null) {
+                    item.setProductName(p.getProductName());
+                    item.setProductNo(p.getProductNo());
+                    item.setSubmodelName(p.getSubmodelName());
+                    item.setSubmodelNo(p.getSubmodelNo());
+                    // 如果前端没传单价，用产品表里的单价（分）
+                    if (item.getUnitPrice() == null || item.getUnitPrice() == 0) {
+                        item.setUnitPrice(p.getUnitPrice());
+                    }
+                }
+            }
+            // 计算小计
+            item.calcSubtotal();
+            // 手动关联父实体（确保外键不为 null）
+            item.setManifest(manifest);
+        }
+
+        // 计算总价
+        manifest.calcTotalPrice();
+
         return manifestRepository.save(manifest);
     }
 
-    /** 删除 */
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         manifestRepository.deleteById(id);
-    }
-
-    /** 检查货品编号是否存在 */
-    public boolean existsByGoodsNo(String goodsNo) {
-        return manifestRepository.existsByGoodsNo(goodsNo);
     }
 }

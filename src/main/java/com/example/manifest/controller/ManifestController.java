@@ -2,10 +2,8 @@ package com.example.manifest.controller;
 
 import com.example.manifest.entity.Manifest;
 import com.example.manifest.service.ManifestService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,94 +18,89 @@ public class ManifestController {
 
     private final ManifestService manifestService;
 
-    /** GET /api/manifest — 查询全部货单 */
+    /** 获取所有货单（不含明细，用于列表展示） */
     @GetMapping
     public ResponseEntity<List<Manifest>> list() {
-        return ResponseEntity.ok(manifestService.findAll());
+        List<Manifest> list = manifestService.findAll();
+        // 明细已在 EAGER fetch 中，一起返回
+        return ResponseEntity.ok(list);
     }
 
-    /** GET /api/manifest/{id} — 根据 ID 查询 */
+    /** 获取单个货单（包含明细） */
     @GetMapping("/{id}")
-    public ResponseEntity<Manifest> getById(@PathVariable Long id) {
-        return manifestService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Manifest> getById(@PathVariable Integer id) {
+        Manifest m = manifestService.findById(id);
+        if (m == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(m);
     }
 
-    /** POST /api/manifest — 新增货单 */
+    /** 新增货单 */
     @PostMapping
-    public ResponseEntity<Map<String, Object>> create(@Valid @RequestBody Manifest manifest,
-                                                        BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> create(@RequestBody Manifest manifest) {
         Map<String, Object> result = new HashMap<>();
-
-        if (bindingResult.hasErrors()) {
+        if (manifest.getCustomerId() == null) {
             result.put("success", false);
-            result.put("message", bindingResult.getFieldErrors().get(0).getDefaultMessage());
+            result.put("message", "请选择客户");
             return ResponseEntity.badRequest().body(result);
         }
-
-        if (manifestService.existsByGoodsNo(manifest.getGoodsNo())) {
+        if (manifest.getItems() == null || manifest.getItems().isEmpty()) {
             result.put("success", false);
-            result.put("message", "货品编号已存在，请勿重复添加");
+            result.put("message", "请至少添加一个产品明细");
             return ResponseEntity.badRequest().body(result);
         }
-
         Manifest saved = manifestService.save(manifest);
         result.put("success", true);
-        result.put("message", "添加成功");
+        result.put("message", "货单创建成功");
         result.put("data", saved);
         return ResponseEntity.ok(result);
     }
 
-    /** PUT /api/manifest/{id} — 更新货单 */
+    /** 更新货单 */
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> update(@PathVariable Long id,
-                                                         @Valid @RequestBody Manifest manifest,
-                                                         BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Integer id,
+                                                       @RequestBody Manifest manifest) {
         Map<String, Object> result = new HashMap<>();
-
-        if (bindingResult.hasErrors()) {
-            result.put("success", false);
-            result.put("message", bindingResult.getFieldErrors().get(0).getDefaultMessage());
-            return ResponseEntity.badRequest().body(result);
-        }
-
-        if (manifestService.findById(id).isEmpty()) {
+        Manifest existing = manifestService.findById(id);
+        if (existing == null) {
             result.put("success", false);
             result.put("message", "货单不存在");
             return ResponseEntity.notFound().build();
         }
-
+        if (manifest.getItems() == null || manifest.getItems().isEmpty()) {
+            result.put("success", false);
+            result.put("message", "请至少添加一个产品明细");
+            return ResponseEntity.badRequest().body(result);
+        }
         manifest.setId(id);
-        Manifest updated = manifestService.save(manifest);
+        Manifest saved = manifestService.save(manifest);
         result.put("success", true);
-        result.put("message", "更新成功");
-        result.put("data", updated);
+        result.put("message", "货单更新成功");
+        result.put("data", saved);
         return ResponseEntity.ok(result);
     }
 
-    /** DELETE /api/manifest/{id} — 删除货单 */
+    /** 删除货单 */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> delete(@PathVariable Integer id) {
         Map<String, Object> result = new HashMap<>();
-
-        if (manifestService.findById(id).isEmpty()) {
+        Manifest existing = manifestService.findById(id);
+        if (existing == null) {
             result.put("success", false);
             result.put("message", "货单不存在");
             return ResponseEntity.notFound().build();
         }
-
         manifestService.deleteById(id);
         result.put("success", true);
         result.put("message", "删除成功");
         return ResponseEntity.ok(result);
     }
 
-    /** GET /api/manifest/goods-no/{goodsNo} — 按货品编号查询 */
-    @GetMapping("/goods-no/{goodsNo}")
-    public ResponseEntity<Manifest> getByGoodsNo(@PathVariable String goodsNo) {
-        return manifestService.findByGoodsNo(goodsNo)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    /** 搜索货单（按客户名或手机号） */
+    @GetMapping("/search")
+    public ResponseEntity<List<Manifest>> search(@RequestParam String kw) {
+        return ResponseEntity.ok(manifestService.findAll().stream()
+                .filter(m -> (m.getCustomerName() != null && m.getCustomerName().contains(kw))
+                          || (m.getCustomerPhone() != null && m.getCustomerPhone().contains(kw)))
+                .toList());
     }
 }

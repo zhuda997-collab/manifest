@@ -20,6 +20,12 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    /** 下拉框用：返回所有客户 */
+    @GetMapping("/all")
+    public ResponseEntity<List<Customer>> all() {
+        return ResponseEntity.ok(customerService.findAll());
+    }
+
     @GetMapping
     public ResponseEntity<List<Customer>> list() {
         return ResponseEntity.ok(customerService.findAll());
