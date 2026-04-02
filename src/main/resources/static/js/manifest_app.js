@@ -63,8 +63,8 @@ function handleSearch() {
     const kw = document.getElementById('searchInput').value.trim().toLowerCase();
     filteredManifests = kw
         ? allManifests.filter(m =>
-            (m.customerName && m.customerName.toLowerCase().includes(kw)) ||
-            (m.customerPhone && m.customerPhone.includes(kw))
+            (m.customer?.customerName && m.customer?.customerName.toLowerCase().includes(kw)) ||
+            (m.customer?.phone && m.customer?.phone.includes(kw))
         )
         : [...allManifests];
     renderGrid();
@@ -91,13 +91,12 @@ function renderGrid() {
         const items = m.items || [];
         const itemCount = items.reduce((s, i) => s + (i.quantity || 0), 0);
         const totalYuan = ((m.totalPrice || 0) / 100).toFixed(2);
-        const date = formatDate(m.orderDate || m.createdAt);
         const orderDate = m.orderDate ? formatDate(m.orderDate) : '';
         return `<div class="manifest-card" onclick="showPreview(${m.id})">
             <div class="card-header">
                 <div>
-                    <div class="card-customer">${esc(m.customerName || '未知客户')}</div>
-                    <div class="card-phone">📞 ${esc(m.customerPhone || '—')}</div>
+                    <div class="card-customer">${esc(m.customer?.customerName || '未知客户')}</div>
+                    <div class="card-phone">📞 ${esc(m.customer?.phone || '—')}</div>
                 </div>
                 <div style="text-align:right;">
                     <div class="card-total">¥${totalYuan}</div>
@@ -105,6 +104,10 @@ function renderGrid() {
                 </div>
             </div>
             <div class="card-items-count">共 ${items.length} 种产品 · ${itemCount} 件</div>
+            <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+                <span style="background:#eff6ff;color:#2563eb;font-size:11px;padding:2px 8px;border-radius:10px;">💳 ${esc(m.paymentMethod || '现金')}</span>
+                <span style="background:#f0fdf4;color:#16a34a;font-size:11px;padding:2px 8px;border-radius:10px;">🚚 ${esc(m.shippingMethod || '物流')}</span>
+            </div>
             <div class="card-actions" onclick="event.stopPropagation()">
                 <button class="btn btn-secondary btn-sm" onclick="openEditModal(${m.id})">编辑</button>
                 <button class="btn btn-danger btn-sm" onclick="openConfirm(${m.id})">删除</button>
@@ -149,11 +152,24 @@ async function showPreview(id) {
             <div class="preview-section">
                 <div class="preview-section-title">👤 客户信息</div>
                 <div class="preview-customer-info">
-                    <strong>${esc(m.customerName || '—')}</strong><br>
-                    📞 ${esc(m.customerPhone || '—')}<br>
-                    📍 ${esc(m.customerAddress || '—')}
+                    <strong>${esc(m.customer?.customerName || '—')}</strong><br>
+                    📞 ${esc(m.customer?.phone || '—')}<br>
+                    📍 ${esc(m.customer?.address || '—')}
                 </div>
             </div>
+
+            <!-- 付款 & 出货方式标签 -->
+            <div class="preview-section" style="display:flex;gap:12px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:140px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;">
+                    <div style="font-size:11px;color:#3b82f6;font-weight:700;margin-bottom:4px;">💳 付款方式</div>
+                    <div style="font-size:14px;font-weight:600;color:#1e40af;">${esc(m.paymentMethod || '现金')}</div>
+                </div>
+                <div style="flex:1;min-width:140px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;">
+                    <div style="font-size:11px;color:#16a34a;font-weight:700;margin-bottom:4px;">🚚 出货方式</div>
+                    <div style="font-size:14px;font-weight:600;color:#15803d;">${esc(m.shippingMethod || '物流')}</div>
+                </div>
+            </div>
+
             <div class="preview-section">
                 <div class="preview-section-title">📦 产品明细（${items.length} 项）</div>
                 <div class="item-table-wrapper" style="border-radius:8px;">
@@ -182,6 +198,7 @@ async function showPreview(id) {
                 <div class="preview-notes">${esc(m.notes)}</div>
             </div>` : ''}
             <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+                <button class="btn btn-secondary" onclick="downloadPdf(${m.id})">📥 下载PDF</button>
                 <button class="btn btn-secondary" onclick="closePreview();openEditModal(${m.id})">✏️ 编辑</button>
                 <button class="btn btn-cancel" onclick="closePreview()">关闭</button>
             </div>
@@ -211,6 +228,10 @@ async function openFormModal() {
     // 设置默认日期为今天
     document.getElementById('orderDate').value = new Date().toISOString().slice(0, 10);
 
+    // 默认付款方式 & 出货方式
+    document.getElementById('paymentMethod').value = '现金';
+    document.getElementById('shippingMethod').value = '物流';
+
     // 添加第一行空明细
     addItemRow();
 
@@ -230,13 +251,17 @@ async function openEditModal(id) {
     document.getElementById('notes').value = m.notes || '';
     document.getElementById('orderDate').value = m.orderDate || '';
 
+    // 付款方式 & 出货方式
+    document.getElementById('paymentMethod').value = m.paymentMethod || '现金';
+    document.getElementById('shippingMethod').value = m.shippingMethod || '物流';
+
     // 填充客户下拉框
     const sel = document.getElementById('customerSelect');
     sel.innerHTML = '<option value="">— 请选择客户 —</option>' +
         customers.map(c => `<option value="${c.id}" ${c.id == m.customerId ? 'selected' : ''}>${esc(c.customerName)} (${esc(c.phone || '无手机')})</option>`).join('');
 
     // 显示客户快照
-    showCustomerSnapshot(m.customerId, m.customerName, m.customerPhone, m.customerAddress);
+    showCustomerSnapshot(m.customerId, m.customer?.customerName, m.customer?.phone, m.customer?.address);
 
     // 填充明细行
     const tbody = document.getElementById('itemsBody');
@@ -394,6 +419,8 @@ async function submitForm(e) {
         customerId,
         notes: document.getElementById('notes').value.trim() || null,
         orderDate: document.getElementById('orderDate').value || null,
+        paymentMethod: document.getElementById('paymentMethod').value || '现金',
+        shippingMethod: document.getElementById('shippingMethod').value || '物流',
         items
     };
 
@@ -450,6 +477,17 @@ async function confirmDelete() {
     } catch (err) {
         alert('请求异常：' + err.message);
     }
+}
+
+// ── PDF 下载 ────────────────────────────────────────────────────
+function downloadPdf(id) {
+    const url = `${MANIFEST_API}/${id}/pdf`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = ''; // 浏览器自动从 Content-Disposition 取文件名
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 // ── 工具函数 ────────────────────────────────────────────────────

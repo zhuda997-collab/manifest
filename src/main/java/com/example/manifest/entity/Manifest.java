@@ -1,7 +1,6 @@
 package com.example.manifest.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -31,21 +30,14 @@ public class Manifest {
     @Column(name = "guid", unique = true, length = 36, nullable = false)
     private String guid;
 
-    /** 客户ID（外键） */
+    /** 客户ID（外键，接收前端传入） */
     @Column(name = "customer_id")
     private Integer customerId;
 
-    /** 下单时客户名（快照） */
-    @Column(name = "customer_name", length = 200)
-    private String customerName;
-
-    /** 下单时手机号（快照） */
-    @Column(name = "customer_phone", length = 20)
-    private String customerPhone;
-
-    /** 下单时地址（快照） */
-    @Column(name = "customer_address", length = 500)
-    private String customerAddress;
+    /** 客户（动态关联，永远取最新数据） */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id", insertable = false, updatable = false)
+    private Customer customer;
 
     /** 总价（分） */
     @Column(name = "total_price", nullable = false)
@@ -54,6 +46,14 @@ public class Manifest {
     /** 备注 */
     @Column(name = "notes", length = 1000)
     private String notes;
+
+    /** 付款方式：现金/微信/支付宝/银行卡/信用卡/欠款 */
+    @Column(name = "payment_method", length = 20)
+    private String paymentMethod = "现金";
+
+    /** 出货方式：物流/快递/捎货 */
+    @Column(name = "shipping_method", length = 20)
+    private String shippingMethod = "物流";
 
     /** 货单日期 */
     @Column(name = "order_date")

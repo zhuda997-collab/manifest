@@ -276,7 +276,7 @@
         <form id="manifestForm" onsubmit="submitForm(event)">
             <input type="hidden" id="editId">
 
-            <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+            <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
 
                 <!-- 客户选择 -->
                 <div>
@@ -292,11 +292,34 @@
                     <input type="date" id="orderDate">
                 </div>
 
-                <!-- 备注 -->
+                <!-- 付款方式 -->
                 <div>
-                    <label class="form-label">备注</label>
-                    <input type="text" id="notes" maxlength="1000" placeholder="选填">
+                    <label class="form-label">💳 付款方式</label>
+                    <select id="paymentMethod">
+                        <option value="现金">现金</option>
+                        <option value="微信">微信</option>
+                        <option value="支付宝">支付宝</option>
+                        <option value="银行卡">银行卡</option>
+                        <option value="信用卡">信用卡</option>
+                        <option value="欠款">欠款</option>
+                    </select>
                 </div>
+
+                <!-- 出货方式 -->
+                <div>
+                    <label class="form-label">🚚 出货方式</label>
+                    <select id="shippingMethod">
+                        <option value="物流">物流</option>
+                        <option value="快递">快递</option>
+                        <option value="捎货">捎货</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 备注行（单独一行） -->
+            <div style="padding:0 20px 12px;">
+                <label class="form-label">备注</label>
+                <input type="text" id="notes" maxlength="1000" placeholder="选填，如特殊要求、地址补充等" style="width:100%;padding:8px 10px;border:1px solid var(--gray-300);border-radius:8px;font-size:13px;box-sizing:border-box;">
             </div>
 
             <!-- 客户快照展示 -->

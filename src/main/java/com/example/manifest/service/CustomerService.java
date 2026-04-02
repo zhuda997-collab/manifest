@@ -32,8 +32,14 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
+    /**
+     * 软删除（设置 isDel = true）
+     */
     @Transactional
     public void deleteById(Integer id) {
-        customerRepository.deleteById(id);
+        customerRepository.findById(id).ifPresent(customer -> {
+            customer.setIsDel(true);
+            customerRepository.save(customer);
+        });
     }
 }

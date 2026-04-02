@@ -16,7 +16,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    /** 查询全部产品 */
+    /** 查询全部产品（已自动过滤 is_del=true 的记录） */
     public List<Product> findAll() {
         return productRepository.findAll();
     }
@@ -40,10 +40,16 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    /** 删除 */
+    /**
+     * 软删除（设置 isDel = true）
+     * 不真正从数据库删除，数据仍保留但查询时自动过滤
+     */
     @Transactional
     public void deleteById(Integer id) {
-        productRepository.deleteById(id);
+        productRepository.findById(id).ifPresent(product -> {
+            product.setIsDel(true);
+            productRepository.save(product);
+        });
     }
 
     /** 检查产品号+子型号组合是否已存在 */

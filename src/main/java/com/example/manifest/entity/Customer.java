@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "customer")
+@Where(clause = "is_del = false")
 public class Customer {
 
     @Id
@@ -46,6 +48,10 @@ public class Customer {
     /** 更新时间 */
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    /** 软删除标记（true=已删除，默认false） */
+    @Column(name = "is_del")
+    private Boolean isDel = false;
 
     @PrePersist
     protected void onCreate() {
