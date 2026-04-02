@@ -221,7 +221,7 @@ public class ManifestPdfService {
         String[] headers = {"序号", "商品名称", "商品规格", "备注", "数量", "单价(元)", "小计(元)"};
         for (String h : headers) {
             PdfPCell cell = new PdfPCell(new Phrase(h, new Font(CJK_BASE_FONT, 8, Font.NORMAL, BLACK)));
-            cell.setBackgroundColor(TABLE_HEAD);
+            cell.setBackgroundColor(null);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPadding(7);
             cell.setBorder(Rectangle.BOX);
@@ -255,7 +255,7 @@ public class ManifestPdfService {
             empty.setColspan(7);
             empty.setHorizontalAlignment(Element.ALIGN_CENTER);
             empty.setPadding(14);
-            empty.setBackgroundColor(WHITE);
+            empty.setBackgroundColor(null);
             empty.setBorder(Rectangle.BOX);
             empty.setBorderColor(LIGHT_GRAY);
             table.addCell(empty);
@@ -267,7 +267,7 @@ public class ManifestPdfService {
         pageLabel.setColspan(4);
         pageLabel.setHorizontalAlignment(Element.ALIGN_RIGHT);
         pageLabel.setPadding(7);
-        pageLabel.setBackgroundColor(TABLE_HEAD);
+        pageLabel.setBackgroundColor(null);
         pageLabel.setBorder(Rectangle.BOX);
         pageLabel.setBorderColor(LIGHT_GRAY);
         table.addCell(pageLabel);
@@ -282,7 +282,7 @@ public class ManifestPdfService {
     private void addTableCell(PdfPTable table, String text, int align) {
         PdfPCell cell = new PdfPCell(new Phrase(text, new Font(CJK_BASE_FONT, 10, Font.NORMAL, BLACK)));
         cell.setHorizontalAlignment(align);
-        cell.setBackgroundColor(WHITE);
+        cell.setBackgroundColor(null);
         cell.setPadding(7);
         cell.setBorder(Rectangle.BOX);
         cell.setBorderColor(LIGHT_GRAY);
@@ -326,7 +326,7 @@ public class ManifestPdfService {
         leftCell.setBorder(Rectangle.BOX);
         leftCell.setBorderColor(LIGHT_GRAY);
         leftCell.setPadding(8);
-        leftCell.setBackgroundColor(TABLE_HEAD);
+        leftCell.setBackgroundColor(null);
         leftCell.addElement(p("总计", 8, false, GRAY_TEXT));
         leftCell.addElement(p("大写: " + upperTotal + "元整", 10, true, BLACK));
         table.addCell(leftCell);
@@ -336,7 +336,7 @@ public class ManifestPdfService {
         freightCell.setBorder(Rectangle.BOX);
         freightCell.setBorderColor(LIGHT_GRAY);
         freightCell.setPadding(8);
-        freightCell.setBackgroundColor(TABLE_HEAD);
+        freightCell.setBackgroundColor(null);
         freightCell.addElement(p("运费", 8, false, GRAY_TEXT));
         freightCell.addElement(p(df.format(freightAmt), 10, true, BLACK));
         table.addCell(freightCell);
@@ -346,7 +346,7 @@ public class ManifestPdfService {
         discCell.setBorder(Rectangle.BOX);
         discCell.setBorderColor(LIGHT_GRAY);
         discCell.setPadding(8);
-        discCell.setBackgroundColor(TABLE_HEAD);
+        discCell.setBackgroundColor(null);
         discCell.addElement(p("优惠合计", 8, false, GRAY_TEXT));
         discCell.addElement(p(df.format(discAmt), 10, true, BLACK));
         table.addCell(discCell);
@@ -356,7 +356,7 @@ public class ManifestPdfService {
         unpaidCell.setBorder(Rectangle.BOX);
         unpaidCell.setBorderColor(LIGHT_GRAY);
         unpaidCell.setPadding(8);
-        unpaidCell.setBackgroundColor(new Color(0xFF, 0xF0, 0xF0));
+        unpaidCell.setBackgroundColor(null);
         unpaidCell.addElement(p("未付金额", 8, false, GRAY_TEXT));
         unpaidCell.addElement(p(df.format(unpaidAmt), 11, true, new Color(0xCC, 0x00, 0x00)));
         table.addCell(unpaidCell);
@@ -387,7 +387,7 @@ public class ManifestPdfService {
         noteLabelCell.setBorder(Rectangle.BOX);
         noteLabelCell.setBorderColor(LIGHT_GRAY);
         noteLabelCell.setPadding(8);
-        noteLabelCell.setBackgroundColor(TABLE_HEAD);
+        noteLabelCell.setBackgroundColor(null);
         notesTable.addCell(noteLabelCell);
 
         PdfPCell noteValCell = new PdfPCell(new Phrase(isBlank(notes) ? "—" : notes, new Font(CJK_BASE_FONT, 10, Font.NORMAL, BLACK)));
@@ -450,7 +450,7 @@ public class ManifestPdfService {
         PdfPCell coCell = new PdfPCell();
         coCell.setBorder(Rectangle.NO_BORDER);
         coCell.setPadding(8);
-        coCell.setBackgroundColor(TABLE_HEAD);
+        coCell.setBackgroundColor(null);
         coCell.addElement(p("公司名称：" + COMPANY_NAME.replace("订货单", ""), 8, false, GRAY_TEXT));
         coCell.addElement(p("公司电话：0350-8505555", 8, false, GRAY_TEXT));
         coCell.addElement(p("公司地址：山西侯马东站旁边", 8, false, GRAY_TEXT));
