@@ -115,13 +115,14 @@ public class ManifestPdfService {
         title.setSpacingAfter(4);
         doc.add(title);
 
-        String guid = manifest.getGuid();
-        String guidLabel = (!isBlank(guid) && guid.length() >= 8) ? guid.substring(0, 8).toUpperCase() : "M" + manifest.getId();
         String dateStr = manifest.getOrderDate() != null
                 ? manifest.getOrderDate().format(DATE_FMT)
                 : (manifest.getCreatedAt() != null ? manifest.getCreatedAt().toLocalDate().format(DATE_FMT) : "");
 
-        Paragraph subPara = new Paragraph("No. " + guidLabel + "    日期：" + dateStr, createFont(10, false, Color.GRAY));
+        // 货单编号：日期 + 客户ID + 货单ID
+        String manifestNo = dateStr.replace("-", "") + "-C" + manifest.getCustomerId() + "-M" + manifest.getId();
+
+        Paragraph subPara = new Paragraph("No. " + manifestNo, createFont(10, false, Color.GRAY));
         subPara.setAlignment(Element.ALIGN_CENTER);
         subPara.setSpacingAfter(10);
         doc.add(subPara);
@@ -151,13 +152,13 @@ public class ManifestPdfService {
         r1c1.addElement(new Paragraph(custName, new Font(CJK_BASE_FONT, 13, Font.BOLD, Color.BLACK)));
         table.addCell(r1c1);
 
-        // Row 1, Col 2: 单号
+        // Row 1, Col 2: 客户ID
         PdfPCell r1c2 = new PdfPCell();
         r1c2.setPadding(8);
         r1c2.setBorder(Rectangle.BOTTOM);
         r1c2.setBorderColor(LIGHT_GRAY);
-        r1c2.addElement(new Paragraph("单号", new Font(CJK_BASE_FONT, 9, Font.NORMAL, Color.GRAY)));
-        r1c2.addElement(new Paragraph(str(manifest.getGuid()), new Font(CJK_BASE_FONT, 9, Font.BOLD, Color.BLACK)));
+        r1c2.addElement(new Paragraph("客户ID", new Font(CJK_BASE_FONT, 9, Font.NORMAL, Color.GRAY)));
+        r1c2.addElement(new Paragraph("C" + manifest.getCustomerId(), new Font(CJK_BASE_FONT, 11, Font.BOLD, Color.BLACK)));
         table.addCell(r1c2);
 
         // Row 1, Col 3: 日期
