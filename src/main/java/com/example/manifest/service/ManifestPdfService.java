@@ -222,7 +222,7 @@ public class ManifestPdfService {
         // 表头
         String[] headers = {"序号", "商品名称", "商品规格", "备注", "数量", "单价(元)", "小计(元)"};
         for (String h : headers) {
-            PdfPCell cell = new PdfPCell(new Phrase(h, new Font(CJK_BASE_FONT, 9, Font.BOLD, BLACK)));
+            PdfPCell cell = new PdfPCell(new Phrase(h, new Font(CJK_BASE_FONT, 8, Font.NORMAL, BLACK)));
             cell.setBackgroundColor(TABLE_HEAD);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPadding(7);
@@ -253,7 +253,7 @@ public class ManifestPdfService {
                 addTableCell(table, yuan(item.getSubtotal()), Element.ALIGN_RIGHT);
             }
         } else {
-            PdfPCell empty = new PdfPCell(new Phrase("（暂无产品明细）", new Font(CJK_BASE_FONT, 9, Font.NORMAL, GRAY_TEXT)));
+            PdfPCell empty = new PdfPCell(new Phrase("（暂无产品明细）", new Font(CJK_BASE_FONT, 10, Font.NORMAL, GRAY_TEXT)));
             empty.setColspan(7);
             empty.setHorizontalAlignment(Element.ALIGN_CENTER);
             empty.setPadding(14);
@@ -265,7 +265,7 @@ public class ManifestPdfService {
 
         // 页合计行
         int totalFen = manifest.getTotalPrice() != null ? manifest.getTotalPrice() : 0;
-        PdfPCell pageLabel = new PdfPCell(new Phrase("本页合计", new Font(CJK_BASE_FONT, 9, Font.BOLD, BLACK)));
+        PdfPCell pageLabel = new PdfPCell(new Phrase("本页合计", new Font(CJK_BASE_FONT, 8, Font.NORMAL, GRAY_TEXT)));
         pageLabel.setColspan(4);
         pageLabel.setHorizontalAlignment(Element.ALIGN_RIGHT);
         pageLabel.setPadding(7);
@@ -282,7 +282,7 @@ public class ManifestPdfService {
     }
 
     private void addTableCell(PdfPTable table, String text, int align) {
-        PdfPCell cell = new PdfPCell(new Phrase(text, new Font(CJK_BASE_FONT, 9, Font.NORMAL, BLACK)));
+        PdfPCell cell = new PdfPCell(new Phrase(text, new Font(CJK_BASE_FONT, 10, Font.NORMAL, BLACK)));
         cell.setHorizontalAlignment(align);
         cell.setBackgroundColor(WHITE);
         cell.setPadding(7);
@@ -385,14 +385,14 @@ public class ManifestPdfService {
         notesTable.setSpacingBefore(0);
         notesTable.setSpacingAfter(6);
 
-        PdfPCell noteLabelCell = new PdfPCell(new Phrase("备注", new Font(CJK_BASE_FONT, 9, Font.NORMAL, GRAY_TEXT)));
+        PdfPCell noteLabelCell = new PdfPCell(new Phrase("备注", new Font(CJK_BASE_FONT, 8, Font.NORMAL, GRAY_TEXT)));
         noteLabelCell.setBorder(Rectangle.BOX);
         noteLabelCell.setBorderColor(LIGHT_GRAY);
         noteLabelCell.setPadding(8);
         noteLabelCell.setBackgroundColor(TABLE_HEAD);
         notesTable.addCell(noteLabelCell);
 
-        PdfPCell noteValCell = new PdfPCell(new Phrase(isBlank(notes) ? "—" : notes, new Font(CJK_BASE_FONT, 9, Font.NORMAL, BLACK)));
+        PdfPCell noteValCell = new PdfPCell(new Phrase(isBlank(notes) ? "—" : notes, new Font(CJK_BASE_FONT, 10, Font.NORMAL, BLACK)));
         noteValCell.setBorder(Rectangle.BOX);
         noteValCell.setBorderColor(LIGHT_GRAY);
         noteValCell.setPadding(8);
@@ -493,7 +493,7 @@ public class ManifestPdfService {
     }
 
     private PdfPCell newCell(String text, int border, int padding) {
-        PdfPCell cell = new PdfPCell(new Phrase(text, new Font(CJK_BASE_FONT, 9, Font.NORMAL, BLACK)));
+        PdfPCell cell = new PdfPCell(new Phrase(text, new Font(CJK_BASE_FONT, 10, Font.NORMAL, BLACK)));
         cell.setBorder(border);
         cell.setPadding(padding);
         return cell;
