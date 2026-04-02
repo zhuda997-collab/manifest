@@ -120,7 +120,7 @@ public class ManifestPdfService {
                 : (manifest.getCreatedAt() != null ? manifest.getCreatedAt().toLocalDate().format(DATE_FMT) : "");
 
         // 货单编号：日期 + 客户ID + 货单ID
-        String manifestNo = dateStr.replace("-", "") + "-C" + manifest.getCustomerId() + "-M" + manifest.getId();
+        String manifestNo = dateStr + "-C" + manifest.getCustomerId() + "-M" + manifest.getId();
 
         Paragraph subPara = new Paragraph("No. " + manifestNo, createFont(10, false, Color.GRAY));
         subPara.setAlignment(Element.ALIGN_CENTER);
