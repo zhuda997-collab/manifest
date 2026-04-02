@@ -133,7 +133,7 @@ public class ManifestController {
         String label = (orderNo != null && !orderNo.isBlank())
                 ? orderNo
                 : "M" + m.getId();
-        String filename = "送货单_" + label + ".pdf";
+        String filename = label + ".pdf";
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
         response.setContentLengthLong(pdfBytes.length);
