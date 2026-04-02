@@ -165,7 +165,7 @@ public class ManifestPdfService {
         // 两行三列表格
         PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100);
-        table.setWidths(new float[]{1.5f, 1.5f, 1f, 1f, 1f, 1.5f});
+        table.setWidths(new float[]{0.75f, 0.75f, 1.5f, 0.5f, 1.5f, 1.75f});
         table.setSpacingAfter(8);
 
         // Row 1: 客户名称 | 联系人 | 联系电话 | 收货人 | 收货电话 | [空]
