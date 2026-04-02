@@ -55,6 +55,18 @@ public class Manifest {
     @Column(name = "shipping_method", length = 20)
     private String shippingMethod = "物流";
 
+    /** 付款状态：已付/未付 */
+    @Column(name = "payment_status", length = 20)
+    private String paymentStatus = "未付";
+
+    /** 运费（分） */
+    @Column(name = "freight")
+    private Integer freight = 0;
+
+    /** 优惠合计（分） */
+    @Column(name = "discount")
+    private Integer discount = 0;
+
     /** 货单日期 */
     @Column(name = "order_date")
     private LocalDate orderDate;

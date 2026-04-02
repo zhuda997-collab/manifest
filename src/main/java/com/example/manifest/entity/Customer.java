@@ -41,6 +41,14 @@ public class Customer {
     @Column(name = "address", length = 500)
     private String address;
 
+    /** 收货人 */
+    @Column(name = "receiver_name", length = 100)
+    private String receiverName;
+
+    /** 收货电话 */
+    @Column(name = "receiver_phone", length = 20)
+    private String receiverPhone;
+
     /** 创建时间 */
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
