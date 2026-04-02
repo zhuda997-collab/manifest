@@ -99,7 +99,6 @@ public class ManifestPdfService {
 
         addTitle(doc, manifest);
         addInfoSection(doc, manifest, customer);
-        addPaymentShippingSection(doc, manifest);
         addItemsTable(doc, manifest);
         addTotalAndNotes(doc, manifest);
         addSignatureSection(doc);
@@ -108,22 +107,17 @@ public class ManifestPdfService {
         return out.toByteArray();
     }
 
-    // ── 标题 ────────────────────────────────────────────────
+    // ── 标题（No. 放左上角，无"送货单"标题） ────────────────
     private void addTitle(Document doc, Manifest manifest) throws DocumentException {
-        Paragraph title = new Paragraph("送  货  单", createFont(24, true, PRIMARY_COLOR));
-        title.setAlignment(Element.ALIGN_CENTER);
-        title.setSpacingAfter(4);
-        doc.add(title);
-
         String dateStr = manifest.getOrderDate() != null
                 ? manifest.getOrderDate().format(DATE_FMT)
                 : (manifest.getCreatedAt() != null ? manifest.getCreatedAt().toLocalDate().format(DATE_FMT) : "");
 
-        // 货单编号：日期 + 客户ID + 货单ID
+        // 货单编号：日期 + 客户ID + 货单ID，左上角
         String manifestNo = dateStr + "-C" + manifest.getCustomerId() + "-M" + manifest.getId();
 
-        Paragraph subPara = new Paragraph("No. " + manifestNo, createFont(10, false, Color.GRAY));
-        subPara.setAlignment(Element.ALIGN_CENTER);
+        Paragraph subPara = new Paragraph("No. " + manifestNo, createFont(11, true, PRIMARY_COLOR));
+        subPara.setAlignment(Element.ALIGN_LEFT);
         subPara.setSpacingAfter(10);
         doc.add(subPara);
     }
@@ -152,16 +146,17 @@ public class ManifestPdfService {
         r1c1.addElement(new Paragraph(custName, new Font(CJK_BASE_FONT, 13, Font.BOLD, Color.BLACK)));
         table.addCell(r1c1);
 
-        // Row 1, Col 2: 客户ID
+        // Row 1, Col 2: 付款方式
         PdfPCell r1c2 = new PdfPCell();
         r1c2.setPadding(8);
         r1c2.setBorder(Rectangle.BOTTOM);
         r1c2.setBorderColor(LIGHT_GRAY);
-        r1c2.addElement(new Paragraph("客户ID", new Font(CJK_BASE_FONT, 9, Font.NORMAL, Color.GRAY)));
-        r1c2.addElement(new Paragraph("C" + manifest.getCustomerId(), new Font(CJK_BASE_FONT, 11, Font.BOLD, Color.BLACK)));
+        String payment = str(manifest.getPaymentMethod());
+        r1c2.addElement(new Paragraph("付款方式", new Font(CJK_BASE_FONT, 9, Font.NORMAL, Color.GRAY)));
+        r1c2.addElement(new Paragraph(isBlank(payment) ? "现金" : payment, new Font(CJK_BASE_FONT, 11, Font.BOLD, new Color(0x59, 0x30, 0x7B))));
         table.addCell(r1c2);
 
-        // Row 1, Col 3: 日期
+        // Row 1, Col 3: 出货方式
         String dateStr = manifest.getOrderDate() != null
                 ? manifest.getOrderDate().format(DATE_FMT)
                 : (manifest.getCreatedAt() != null ? manifest.getCreatedAt().toLocalDate().format(DATE_FMT) : "—");
@@ -169,8 +164,9 @@ public class ManifestPdfService {
         r1c3.setPadding(8);
         r1c3.setBorder(Rectangle.BOTTOM);
         r1c3.setBorderColor(LIGHT_GRAY);
-        r1c3.addElement(new Paragraph("日期", new Font(CJK_BASE_FONT, 9, Font.NORMAL, Color.GRAY)));
-        r1c3.addElement(new Paragraph(dateStr, new Font(CJK_BASE_FONT, 10, Font.BOLD, Color.BLACK)));
+        String shipping = str(manifest.getShippingMethod());
+        r1c3.addElement(new Paragraph("出货方式", new Font(CJK_BASE_FONT, 9, Font.NORMAL, Color.GRAY)));
+        r1c3.addElement(new Paragraph(isBlank(shipping) ? "物流" : shipping, new Font(CJK_BASE_FONT, 11, Font.BOLD, new Color(0x15, 0x8B, 0x31))));
         table.addCell(r1c3);
 
         // Row 2, Col 1: 电话 + 地址
