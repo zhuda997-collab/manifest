@@ -198,9 +198,13 @@ public class ManifestPdfService {
         PdfPCell cell = new PdfPCell();
         cell.setBorder(border);
         cell.setBorderColor(LIGHT_GRAY);
-        cell.setPadding(6);
-        cell.addElement(new Paragraph(label, new Font(CJK_BASE_FONT, 8, Font.NORMAL, GRAY_TEXT)));
-        cell.addElement(new Paragraph(isBlank(value) ? "—" : value, new Font(CJK_BASE_FONT, 10, Font.BOLD, BLACK)));
+        cell.setPadding(4);
+        Paragraph labelP = new Paragraph(label, new Font(CJK_BASE_FONT, 7, Font.NORMAL, GRAY_TEXT));
+        labelP.setLeading(9f, 0f);
+        cell.addElement(labelP);
+        Paragraph valueP = new Paragraph(isBlank(value) ? "—" : value, new Font(CJK_BASE_FONT, 8, Font.NORMAL, BLACK));
+        valueP.setLeading(10f, 0f);
+        cell.addElement(valueP);
         table.addCell(cell);
     }
 
