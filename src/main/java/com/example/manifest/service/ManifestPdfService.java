@@ -143,7 +143,7 @@ public class ManifestPdfService {
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPadding(4);
         cell.addElement(new Paragraph(label, new Font(CJK_BASE_FONT, 8, Font.NORMAL, GRAY_TEXT)));
-        cell.addElement(new Paragraph(value, new Font(CJK_BASE_FONT, 9, Font.NORMAL, BLACK)));
+        cell.addElement(new Paragraph(value, new Font(CJK_BASE_FONT, 10, Font.NORMAL, BLACK)));
         table.addCell(cell);
     }
 
@@ -199,11 +199,11 @@ public class ManifestPdfService {
         cell.setBorder(border);
         cell.setBorderColor(LIGHT_GRAY);
         cell.setPadding(4);
-        Paragraph labelP = new Paragraph(label, new Font(CJK_BASE_FONT, 7, Font.NORMAL, GRAY_TEXT));
-        labelP.setLeading(9f, 0f);
+        Paragraph labelP = new Paragraph(label, new Font(CJK_BASE_FONT, 8, Font.NORMAL, GRAY_TEXT));
+        labelP.setLeading(10f, 0f);
         cell.addElement(labelP);
-        Paragraph valueP = new Paragraph(isBlank(value) ? "—" : value, new Font(CJK_BASE_FONT, 8, Font.NORMAL, BLACK));
-        valueP.setLeading(10f, 0f);
+        Paragraph valueP = new Paragraph(isBlank(value) ? "—" : value, new Font(CJK_BASE_FONT, 10, Font.NORMAL, BLACK));
+        valueP.setLeading(13f, 0f);
         cell.addElement(valueP);
         table.addCell(cell);
     }
