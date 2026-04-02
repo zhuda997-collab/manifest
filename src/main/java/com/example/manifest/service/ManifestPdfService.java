@@ -120,8 +120,9 @@ public class ManifestPdfService {
         doc.add(title);
 
         // 右上角三行列：订单号 | 下单时间 | 打印时间
-        String orderNo   = "DD-" + (manifest.getOrderDate() != null ? manifest.getOrderDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")) : "00000000")
-                           + String.format("%05d", manifest.getId());
+        String orderNo = manifest.getOrderNumber() != null ? manifest.getOrderNumber()
+                           : ("DD-" + (manifest.getOrderDate() != null ? manifest.getOrderDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")) : "00000000")
+                           + String.format("%05d", manifest.getId()));
         String orderTime = manifest.getCreatedAt() != null ? manifest.getCreatedAt().format(DATE_TIME_FMT) : "—";
         String printTime = LocalDateTime.now().format(DATE_TIME_FMT);
 

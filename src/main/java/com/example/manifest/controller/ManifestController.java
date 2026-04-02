@@ -129,9 +129,9 @@ public class ManifestController {
             return;
         }
         byte[] pdfBytes = manifestPdfService.generatePdf(id);
-        String guid = m.getGuid();
-        String label = (guid != null && !guid.isBlank() && guid.length() >= 8)
-                ? guid.substring(0, 8).toUpperCase()
+        String orderNo = m.getOrderNumber();
+        String label = (orderNo != null && !orderNo.isBlank())
+                ? orderNo
                 : "M" + m.getId();
         String filename = "送货单_" + label + ".pdf";
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);

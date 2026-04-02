@@ -78,7 +78,20 @@ public class ManifestService {
         // 计算总价
         manifest.calcTotalPrice();
 
-        return manifestRepository.save(manifest);
+        // 第一次保存（获取数据库自增ID）
+        Manifest saved = manifestRepository.save(manifest);
+
+        // 新建时自动生成订单号（格式：yyyy-MM-dd-C{customerId}-M{id}）
+        if (saved.getOrderNumber() == null || saved.getOrderNumber().isBlank()) {
+            String orderDateStr = saved.getOrderDate() != null
+                    ? saved.getOrderDate().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    : "0000-00-00";
+            String orderNo = orderDateStr + "-C" + saved.getCustomerId() + "-M" + saved.getId();
+            saved.setOrderNumber(orderNo);
+            saved = manifestRepository.save(saved);
+        }
+
+        return saved;
     }
 
     /**

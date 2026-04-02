@@ -67,6 +67,10 @@ public class Manifest {
     @Column(name = "discount")
     private Integer discount = 0;
 
+    /** 订单号，格式：yyyy-MM-dd-C{customerId}-M{id}，新建时自动生成 */
+    @Column(name = "order_number", length = 50)
+    private String orderNumber;
+
     /** 货单日期 */
     @Column(name = "order_date")
     private LocalDate orderDate;

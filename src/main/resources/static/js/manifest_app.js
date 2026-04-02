@@ -100,7 +100,7 @@ function renderGrid() {
                 </div>
                 <div style="text-align:right;">
                     <div class="card-total">¥${totalYuan}</div>
-                    ${orderDate ? `<div class="card-date">${orderDate}</div>` : ''}
+                    <div class="card-date">${m.orderNumber || '—'}</div>
                 </div>
             </div>
             <div class="card-items-count">共 ${items.length} 种产品 · ${itemCount} 件</div>
@@ -143,7 +143,7 @@ async function showPreview(id) {
             <div>
                 <h2>📋 货单详情</h2>
                 <div style="font-size:13px;color:var(--gray-500);margin-top:4px;">
-                    单号：${esc(m.guid || '')} &nbsp;|&nbsp; 日期：${formatDate(m.orderDate || m.createdAt)}
+                    订单号：${esc(m.orderNumber || '')} &nbsp;|&nbsp; 日期：${formatDate(m.orderDate || m.createdAt)}
                 </div>
             </div>
             <button class="close-btn" onclick="closePreview()">×</button>
