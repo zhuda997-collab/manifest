@@ -177,12 +177,12 @@ public class ManifestPdfService {
         addInfoCell(table, "收货地址", receiverAddr, false);  // Row1 Col6 跨行
 
         // Row 2: [空] [空] [空] [空] [空] 收货地址（续）
-        PdfPCell empty1 = newCell("", Rectangle.NO_BORDER, 4);
-        PdfPCell empty2 = newCell("", Rectangle.NO_BORDER, 4);
-        PdfPCell empty3 = newCell("", Rectangle.NO_BORDER, 4);
-        PdfPCell empty4 = newCell("", Rectangle.NO_BORDER, 4);
-        PdfPCell empty5 = newCell("", Rectangle.NO_BORDER, 4);
-        PdfPCell addrCell = newCell("", Rectangle.NO_BORDER, 4);
+        PdfPCell empty1 = newCell("", Rectangle.NO_BORDER, 2);
+        PdfPCell empty2 = newCell("", Rectangle.NO_BORDER, 2);
+        PdfPCell empty3 = newCell("", Rectangle.NO_BORDER, 2);
+        PdfPCell empty4 = newCell("", Rectangle.NO_BORDER, 2);
+        PdfPCell empty5 = newCell("", Rectangle.NO_BORDER, 2);
+        PdfPCell addrCell = newCell("", Rectangle.NO_BORDER, 2);
         table.addCell(empty1);
         table.addCell(empty2);
         table.addCell(empty3);
@@ -198,12 +198,10 @@ public class ManifestPdfService {
         PdfPCell cell = new PdfPCell();
         cell.setBorder(border);
         cell.setBorderColor(LIGHT_GRAY);
-        cell.setPadding(4);
+        cell.setPadding(2);
         Paragraph labelP = new Paragraph(label, new Font(CJK_BASE_FONT, 8, Font.NORMAL, GRAY_TEXT));
-        labelP.setLeading(10f, 0f);
         cell.addElement(labelP);
         Paragraph valueP = new Paragraph(isBlank(value) ? "—" : value, new Font(CJK_BASE_FONT, 10, Font.NORMAL, BLACK));
-        valueP.setLeading(13f, 0f);
         cell.addElement(valueP);
         table.addCell(cell);
     }
