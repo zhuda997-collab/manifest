@@ -150,45 +150,37 @@ public class ManifestPdfService {
     // ══════════════════════════════════════════════════════
     //  2. 客户及收货信息
     // ══════════════════════════════════════════════════════
+    //  2. 客户及收货信息（2列×3行，单行/多行字段错开配对）
+    // ══════════════════════════════════════════════════════
     private void addCustomerInfo(Document doc, Manifest manifest, Customer customer) throws DocumentException {
         String custName      = customer != null ? str(customer.getCustomerName()) : "—";
         String contact       = customer != null ? str(customer.getCustomerName()) : "—";  // 联系人同客户名
-        String custPhone     = customer != null ? str(customer.getPhone()) : "";
+        String custPhone     = customer != null ? str(customer.getPhone()).replace("\n", " ") : "";
         String receiverName  = customer != null ? str(customer.getReceiverName()) : "";
-        String receiverPhone = customer != null ? str(customer.getReceiverPhone()) : "";
+        String receiverPhone = customer != null ? str(customer.getReceiverPhone()).replace("\n", " ") : "";
         String receiverAddr  = customer != null ? str(customer.getAddress()) : "";
 
         // 如果收货人为空，默认同客户名
         if (isBlank(receiverName)) receiverName = custName;
         if (isBlank(receiverPhone)) receiverPhone = custPhone;
 
-        // 两行三列表格
-        PdfPTable table = new PdfPTable(6);
+        // 2列×3行表格：单行字段与可能多行的字段配对
+        PdfPTable table = new PdfPTable(2);
         table.setWidthPercentage(100);
-        table.setWidths(new float[]{1.5f, 1.5f, 1f, 1f, 1f, 1.5f});
-        table.setSpacingAfter(8);
+        table.setWidths(new float[]{1f, 1f});
+        table.setSpacingAfter(6);
 
-        // Row 1: 客户名称 | 联系人 | 联系电话 | 收货人 | 收货电话 | [空]
+        // Row 1: 客户名称 | 联系人
         addInfoCell(table, "客户名称", custName, true);
         addInfoCell(table, "联系人", contact, true);
+
+        // Row 2: 联系电话 | 收货人（电话可能多行，配单行字段）
         addInfoCell(table, "联系电话", custPhone, true);
         addInfoCell(table, "收货人", receiverName, true);
-        addInfoCell(table, "收货电话", receiverPhone, true);
-        addInfoCell(table, "收货地址", receiverAddr, false);  // Row1 Col6 跨行
 
-        // Row 2: [空] [空] [空] [空] [空] 收货地址（续）
-        PdfPCell empty1 = newCell("", Rectangle.NO_BORDER, 2);
-        PdfPCell empty2 = newCell("", Rectangle.NO_BORDER, 2);
-        PdfPCell empty3 = newCell("", Rectangle.NO_BORDER, 2);
-        PdfPCell empty4 = newCell("", Rectangle.NO_BORDER, 2);
-        PdfPCell empty5 = newCell("", Rectangle.NO_BORDER, 2);
-        PdfPCell addrCell = newCell("", Rectangle.NO_BORDER, 2);
-        table.addCell(empty1);
-        table.addCell(empty2);
-        table.addCell(empty3);
-        table.addCell(empty4);
-        table.addCell(empty5);
-        table.addCell(addrCell);
+        // Row 3: 收货电话 | 收货地址（电话+地址都可能是多行，配对）
+        addInfoCell(table, "收货电话", receiverPhone, true);
+        addInfoCell(table, "收货地址", receiverAddr, false);
 
         doc.add(table);
     }
