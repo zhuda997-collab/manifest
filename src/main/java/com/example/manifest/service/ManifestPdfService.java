@@ -39,7 +39,7 @@ public class ManifestPdfService {
     private static final Color LIGHT_GRAY  = new Color(0xDD, 0xDD, 0xDD);
 
     // 公司名称（写死在模板里）
-    private static final String COMPANY_NAME = "五台山瓜菜种苗有限公司订货单";
+    private static final String COMPANY_NAME = "山西侯马农友种业订货单";
 
     private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter DATE_FMT      = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -407,7 +407,7 @@ public class ManifestPdfService {
         opCell.setBorderColor(LIGHT_GRAY);
         opCell.setPadding(8);
         opCell.addElement(p("操作员", 8, false, GRAY_TEXT));
-        opCell.addElement(p("罗峰", 9, true, BLACK));
+        opCell.addElement(p("张艳茹", 9, true, BLACK));
         statusTable.addCell(opCell);
 
         // 下单人
@@ -416,7 +416,7 @@ public class ManifestPdfService {
         ordererCell.setBorderColor(LIGHT_GRAY);
         ordererCell.setPadding(8);
         ordererCell.addElement(p("下单人", 8, false, GRAY_TEXT));
-        ordererCell.addElement(p("罗峰", 9, true, BLACK));
+        ordererCell.addElement(p("张艳茹", 9, true, BLACK));
         statusTable.addCell(ordererCell);
 
         // 订单状态
@@ -450,7 +450,7 @@ public class ManifestPdfService {
         coCell.setBackgroundColor(TABLE_HEAD);
         coCell.addElement(p("公司名称：" + COMPANY_NAME.replace("订货单", ""), 8, false, GRAY_TEXT));
         coCell.addElement(p("公司电话：0350-8505555", 8, false, GRAY_TEXT));
-        coCell.addElement(p("公司地址：山西省忻州市忻府区健康东街7号", 8, false, GRAY_TEXT));
+        coCell.addElement(p("公司地址：山西侯马东站旁边", 8, false, GRAY_TEXT));
         companyTable.addCell(coCell);
 
         doc.add(companyTable);
